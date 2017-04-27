@@ -1,0 +1,22 @@
+
+#This process Lists the VLANS on the UCS System(s)
+Get-UCSVlan | Select-Object Name,Id | Sort-Object Id
+
+
+#This process add a VLAN to the selected UCS Systems
+Start-UcsTransaction
+Get-UcsLanCloud | Add-UcsVlan -CompressionType "included" -DefaultNet "no" -Id 912 -McastPolicyName "" -Name "Test1" -PubNwName "" -Sharing "none"
+$mo = Get-UcsLanCloud | Add-UcsFabricNetGroup -ModifyPresent  -Descr "" -NativeNet "" -PolicyOwner "local" -Type "mgmt" -Name "LAB"
+$mo_1 = $mo | Add-UcsFabricPooledVlan -ModifyPresent -Name "Test1"
+Complete-UcsTransaction
+Write-Output "Done adding VLANs"
+
+#This Deletes a VLAN from the VLAN Group 'LAB'
+Start-UcsTransaction
+$mo = Get-UcsLanCloud | Get-UcsFabricNetGroup -Name "LAB" -LimitScope | Set-UcsFabricNetGroup -Descr "" -NativeNet "" -PolicyOwner "local" -Type "mgmt"
+$mo_1 = Get-UcsLanCloud | Get-UcsFabricNetGroup -Name "LAB" -LimitScope | Get-UcsFabricPooledVlan -Name "Test1" | Remove-UcsFabricPooledVlan
+Complete-UcsTransaction
+
+
+#This deletes a VLAN named Test1
+Get-UcsLanCloud | Get-UcsVlan -Name "VCESYS-ESXFT" -LimitScope | Remove-UcsVlan

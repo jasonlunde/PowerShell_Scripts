@@ -1,0 +1,1 @@
+31..34 | Foreach-Object { Get-UcsOrg -Level root | Get-UcsOrg -Name "RTP" -LimitScope | Get-UcsOrg -Name "R471" -LimitScope | Get-UcsServiceProfile -Name "C1K2-HOST$_" -LimitScope | Rename-UcsServiceProfile -NewName  "C1K1-HOST$_" }

@@ -1,0 +1,4 @@
+Reference: http://www.virten.net/2013/03/add-multiple-esxi-hosts-to-vcenter-with-powercli/
+31..32 | Foreach-Object { Add-VMHost r471-host$_.ctc.lab.vce.com -Location SMP -User root -Password 1vBlock9! -RunAsync -force:$true}
+
+31..32 | Foreach-Object { Set-VMHost -VMHost r471-host$_.ctc.lab.vce.com -State "Connected" }
